@@ -69,8 +69,8 @@ class Message(admin.ModelAdmin):
         context['from'] = msg.get_address('from')
         context['to'] = msg.get_addresses('to')
         context['cc'] = msg.get_addresses('cc')
-        context['msg_text'] = msg.text_part.part.get_payload() if msg.text_part else None
-        context['msg_html'] = msg.html_part.part.get_payload() if msg.html_part else None
+        context['msg_text'] = msg.text_part.part.get_payload(decode=True) if msg.text_part else None
+        context['msg_html'] = msg.html_part.part.get_payload(decode=True) if msg.html_part else None
         context['attachments'] = get_attachments(msg)
         context['is_popup'] = True
         context['object'] = instance
@@ -88,7 +88,7 @@ class Message(admin.ModelAdmin):
     def html_view(self, request, pk):
         instance = models.Message.objects.get(pk=pk)
         msg = instance.get_pyz_message()
-        context = {'msg_html': msg.html_part.part.get_payload()}
+        context = {'msg_html': msg.html_part.part.get_payload(decode=True)}
         return render(request, 'django_yubin/html_detail.html', context)
 
 
